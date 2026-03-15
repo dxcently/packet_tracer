@@ -1,0 +1,7 @@
+/target
+.direnv
+.envrc
+/public
+/node_modules
+.env
+justfile
