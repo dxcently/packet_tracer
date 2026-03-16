@@ -2,7 +2,7 @@ import { Handle, Position } from "@xyflow/react";
 import { PcCase } from "lucide-react";
 
 const ServerNode = ({ data }: { data: any }) => (
-  <div className="w-48 h-16 px-4 border-2 border-green-wildfire-500 rounded-sm bg-green-wildfire-950 text-green-wildfire-200 flex items-center justify-between gap-3 shadow-[0_0_12px_rgba(0,255,0,0.25)]">
+  <div className="w-60 h-16 px-4 border-2 border-green-wildfire-500 rounded-sm bg-green-wildfire-950 text-green-wildfire-200 flex items-center justify-between gap-3 shadow-[0_0_12px_rgba(0,255,0,0.25)]">
     {/* Connection Handles */}
     <Handle
       type="target"

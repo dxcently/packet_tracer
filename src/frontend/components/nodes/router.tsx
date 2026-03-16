@@ -27,9 +27,9 @@ const SwitchNode = ({ data }: { data: any }) => (
       <div className="flex flex-col">
         {/* Updated both text elements to use font-orbit */}
         <span className="text-[10px] uppercase text-green-wildfire-400 font-orbit font-bold tracking-widest">
-          Switch Node
+          Router Node
         </span>
-        <strong className="font-orbit text-sm truncate max-w-[120px] tracking-normal">
+        <strong className="font-orbit text-sm truncate max-w-[100px] tracking-normal">
           {data.label}
         </strong>
       </div>
