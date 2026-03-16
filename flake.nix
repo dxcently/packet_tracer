@@ -114,12 +114,6 @@
           {
             name = "hotrun";
             command = ''
-              dir=$1
-              if [ -z "$dir" ]; then
-                echo "Usage: hotrun <page_directory>"
-                exit 1
-              fi
-
               trap 'kill 0' SIGINT
 
               npx rolldown -c rolldown.config.ts -w &
