@@ -2,6 +2,7 @@
   "name": "packet_tracer",
   "version": "1.0.0",
   "dependencies": {
+    "@tailwindcss/cli": "^4.2.1",
     "@xyflow/react": "^12.10.1",
     "lucide-react": "^0.577.0",
     "react": "^19.2.4",

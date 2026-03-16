@@ -31,8 +31,11 @@ const watchHtmlPlugin = (page: string): Plugin => ({
 });
 
 const configs: RolldownOptions[] = pages.map((page) => {
+  const entryTsx = path.join(pagesDir, page, 'index.tsx');
   const entryTs = path.join(pagesDir, page, 'index.ts');
-  const inputPath = fs.existsSync(entryTs) ? entryTs : path.join(pagesDir, page, 'index.js');
+  const inputPath = fs.existsSync(entryTsx) ? entryTsx
+    : fs.existsSync(entryTs) ? entryTs
+    : path.join(pagesDir, page, 'index.js');
 
   return {
     input: inputPath,
