@@ -3,8 +3,12 @@ import ReactDOM from 'react-dom/client';
 import { Network } from 'lucide-react';
 
 const GRID_SIZE = 40;
-const MAX_DRIFT = 8;
+const MAX_DRIFT = 15;
 const NODE_SPEED = 0.3;
+const COLLISION_RADIUS = 12;
+const LINE_CONNECT_DIST = GRID_SIZE * 1.6;
+const MAX_LINE_OPACITY = 0.3;
+const MAX_VELOCITY_MULTIPLIER = 3;
 
 function Landing() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -49,29 +53,37 @@ function Landing() {
     type Node = { baseX: number; baseY: number; x: number; y: number; vx: number; vy: number };
 
     let nodes: Node[] = [];
+    let grid: (Node | undefined)[][] = [];
+    let numCols = 0;
+    let numRows = 0;
     let animationId: number;
 
     function initNodes() {
       nodes = [];
-      const cols = Math.ceil(canvas!.width / GRID_SIZE) + 1;
-      const rows = Math.ceil(canvas!.height / GRID_SIZE) + 1;
-      for (let col = 0; col < cols; col++) {
-        for (let row = 0; row < rows; row++) {
+      numCols = Math.ceil(canvas!.width / GRID_SIZE) + 1;
+      numRows = Math.ceil(canvas!.height / GRID_SIZE) + 1;
+      grid = Array.from({ length: numCols }, () => new Array(numRows).fill(undefined));
+      for (let col = 0; col < numCols; col++) {
+        for (let row = 0; row < numRows; row++) {
           const angle = Math.random() * Math.PI * 2;
-          nodes.push({
+          const node: Node = {
             baseX: col * GRID_SIZE,
             baseY: row * GRID_SIZE,
             x: col * GRID_SIZE,
             y: row * GRID_SIZE,
             vx: Math.cos(angle) * NODE_SPEED,
             vy: Math.sin(angle) * NODE_SPEED,
-          });
+          };
+          nodes.push(node);
+          grid[col][row] = node;
         }
       }
     }
 
     function draw() {
       ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
+
+      // Update positions and enforce drift boundary
       for (const node of nodes) {
         node.x += node.vx;
         node.y += node.vy;
@@ -85,11 +97,76 @@ function Landing() {
           node.vy *= -1;
           node.y = node.baseY + Math.sign(dy) * MAX_DRIFT;
         }
+      }
+
+      // Collision detection and line drawing between adjacent grid neighbours
+      ctx!.lineWidth = 0.6;
+      ctx!.strokeStyle = 'rgba(0,255,0,1)';
+      for (let col = 0; col < numCols; col++) {
+        for (let row = 0; row < numRows; row++) {
+          const node = grid[col][row];
+          if (!node) continue;
+
+          // Only iterate the right, bottom, bottom-right, and bottom-left neighbours
+          // to avoid processing each pair twice
+          const neighbours: (Node | undefined)[] = [
+            col + 1 < numCols ? grid[col + 1][row] : undefined,
+            row + 1 < numRows ? grid[col][row + 1] : undefined,
+            col + 1 < numCols && row + 1 < numRows ? grid[col + 1][row + 1] : undefined,
+            col > 0 && row + 1 < numRows ? grid[col - 1][row + 1] : undefined,
+          ];
+
+          for (const nb of neighbours) {
+            if (!nb) continue;
+            const dx = node.x - nb.x;
+            const dy = node.y - nb.y;
+            const distSq = dx * dx + dy * dy;
+            const dist = Math.sqrt(distSq);
+
+            // Draw line with opacity that fades with distance
+            if (dist < LINE_CONNECT_DIST) {
+              ctx!.globalAlpha = (1 - dist / LINE_CONNECT_DIST) * MAX_LINE_OPACITY;
+              ctx!.beginPath();
+              ctx!.moveTo(node.x, node.y);
+              ctx!.lineTo(nb.x, nb.y);
+              ctx!.stroke();
+            }
+
+            // Elastic collision: bounce nodes that overlap
+            if (dist > 0 && dist < COLLISION_RADIUS) {
+              const nx = dx / dist;
+              const ny = dy / dist;
+              const relVx = node.vx - nb.vx;
+              const relVy = node.vy - nb.vy;
+              const relVn = relVx * nx + relVy * ny;
+              // Only resolve if nodes are approaching each other
+              if (relVn < 0) {
+                node.vx -= relVn * nx;
+                node.vy -= relVn * ny;
+                nb.vx += relVn * nx;
+                nb.vy += relVn * ny;
+                // Clamp speed to avoid runaway acceleration from repeated collisions
+                const maxSpeed = NODE_SPEED * MAX_VELOCITY_MULTIPLIER;
+                const clamp = (v: number) => Math.max(-maxSpeed, Math.min(maxSpeed, v));
+                node.vx = clamp(node.vx);
+                node.vy = clamp(node.vy);
+                nb.vx = clamp(nb.vx);
+                nb.vy = clamp(nb.vy);
+              }
+            }
+          }
+        }
+      }
+      ctx!.globalAlpha = 1;
+
+      // Draw dots on top of lines
+      for (const node of nodes) {
         ctx!.beginPath();
         ctx!.arc(node.x, node.y, 1.5, 0, Math.PI * 2);
         ctx!.fillStyle = 'rgba(0, 255, 0, 0.35)';
         ctx!.fill();
       }
+
       animationId = requestAnimationFrame(draw);
     }
 
