@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Network, User, Lock, Mail, AlertCircle, CheckCircle, Loader } from 'lucide-react';
+import { Network, Lock, Mail, AlertCircle, CheckCircle, Loader } from 'lucide-react';
 
 const GRID_SIZE = 40;
 const MAX_DRIFT = 15;
@@ -16,7 +16,6 @@ function Register() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -198,10 +197,10 @@ function Register() {
     setStatus('loading');
     setMessage('');
 
-    const payload = { username, email, password };
+    const payload = { email, password };
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('/api/user/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -211,21 +210,14 @@ function Register() {
         setStatus('success');
         setMessage('Account created. Redirecting to login...');
         setTimeout(() => { window.location.href = '/login/'; }, 1500);
-      } else if (response.status === 404 || response.status === 405) {
-        // No API implemented yet — treat as mock success
-        setStatus('success');
-        setMessage('Account created. Redirecting to login...');
-        setTimeout(() => { window.location.href = '/login/'; }, 1500);
       } else {
         const data = await response.json().catch(() => ({}));
         setStatus('error');
         setMessage((data as { message?: string }).message ?? 'Registration failed. Try again.');
       }
     } catch {
-      // Network error — treat as mock success
-      setStatus('success');
-      setMessage('Account created. Redirecting to login...');
-      setTimeout(() => { window.location.href = '/login/'; }, 1500);
+      setStatus('error');
+      setMessage('Network error. Please try again.');
     }
   };
 
@@ -271,34 +263,6 @@ function Register() {
           </h2>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            {/* Username */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-red-red-600 text-xs tracking-widest uppercase">
-                Username
-              </label>
-              <div className="relative flex items-center">
-                <User size={14} className="absolute left-3 text-red-red-700 pointer-events-none" />
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  placeholder="choose a username"
-                  className="
-                    w-full pl-9 pr-4 py-2.5
-                    border border-red-red-800 bg-stealth-black-600
-                    text-red-red-300 placeholder-stealth-black-50
-                    text-sm tracking-wider
-                    focus:outline-none focus:border-red-red-500
-                    focus:shadow-[0_0_10px_rgba(255,0,0,0.25)]
-                    transition-all duration-200
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                  "
-                />
-              </div>
-            </div>
-
             {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-red-red-600 text-xs tracking-widest uppercase">
