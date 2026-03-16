@@ -2,6 +2,7 @@ use axum::Router;
 use dotenvy::dotenv;
 use tower_http::services::ServeDir;
 
+pub mod api;
 pub mod context;
 pub mod database;
 
@@ -9,6 +10,7 @@ pub mod database;
 async fn main() {
     dotenv().ok();
     let app = Router::new()
+        .nest("/api", api::api_routes().await)
         .nest_service("/css", ServeDir::new("public/css"))
         .nest_service("/home", ServeDir::new("public/home"))
         .nest_service("/login", ServeDir::new("public/login"))

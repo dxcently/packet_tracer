@@ -20,6 +20,22 @@ impl User {
         }
     }
 
+    pub fn by_id(id: i64) -> Self {
+        Self {
+            id,
+            email: "".into(),
+            password: "".into(),
+        }
+    }
+
+    pub fn by_email(email: String) -> Self {
+        Self {
+            id: 0,
+            email,
+            password: "".into(),
+        }
+    }
+
     pub async fn fetch(&mut self, pool: &PgPool) -> Result<(), sqlx::Error> {
         let user: User = sqlx::query_as("SELECT * FROM users WHERE email = $1")
             .bind(&self.email)
