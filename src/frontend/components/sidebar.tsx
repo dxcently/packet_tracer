@@ -16,10 +16,10 @@ class Sidebar extends Component {
   render() {
     // Hover now triggers the red-red-200 glow and text color
     const itemClasses = `
-      p-3 border-2 border-green-wildfire-500 rounded bg-stealth-black-800 
+      p-3 border-2 border-green-wildfire-500 rounded bg-green-wildfire-900 
       flex items-center gap-3 cursor-grab transition-all duration-300 
       text-green-wildfire-200 group 
-      hover:bg-stealth-black-700 hover:border-red-red-500 
+      hover:bg-green-wildfire-800 hover:border-red-red-500 
       hover:text-red-red-200 hover:shadow-[0_0_15px_rgba(255,0,0,0.4)]
     `;
 

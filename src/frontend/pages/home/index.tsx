@@ -95,7 +95,7 @@ function FlowCanvas() {
       nodeTypes={nodeTypes}
       fitView
       colorMode="dark"
-      className="bg-gray-950"
+      className="bg-stealth-black-400"
     >
       <Background color="#374151" />
       <Controls />
@@ -113,7 +113,7 @@ function FlowCanvas() {
 
 function Home() {
   return (
-    <div className="flex w-screen h-screen overflow-hidden bg-gray-950">
+    <div className="flex w-screen h-screen overflow-hidden bg-stealth-black-400">
       <ReactFlowProvider>
         <Sidebar />
         <div className="flex-grow h-full relative">
