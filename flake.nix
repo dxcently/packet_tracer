@@ -58,9 +58,7 @@
           ];
           buildPhase = ''
             mkdir -p public
-            for dir in $(ls src/frontend/pages); do
-              npx rolldown !!!!!TODO
-            done
+            npx rolldown -c rolldown.config.ts -w
             tailwindcss -i ./src/frontend/theme.css -o ./public/css/index.css --minify
           '';
           installPhase = ''
@@ -102,12 +100,13 @@
           rust-bin.stable.latest.default
           nodejs
           tailwindcss_4
+          postgresql_18
           gcc
         ];
         env = [
           {
             name = "PKG_CONFIG_PATH";
-            value = "${pkgs.openssl.dev}/lib/pkgconfig";
+            value = "${pkgs.openssl.dev}/lib/pkgconfig:${pkgs.postgresql_18}/lib/pkgconfig";
           }
         ];
         commands = [
