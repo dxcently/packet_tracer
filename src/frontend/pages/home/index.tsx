@@ -5,6 +5,7 @@ import {
   ReactFlowProvider,
   Controls,
   Background,
+  Panel,
   useNodesState,
   useEdgesState,
   addEdge,
@@ -62,6 +63,26 @@ function FlowCanvas() {
     [screenToFlowPosition, setNodes]
   );
 
+  const exportToJson = useCallback(() => {
+    const topology = {
+      nodes: nodes.map(({ id, type, position, data }) => ({ id, type, position, data })),
+      edges: edges.map(({ id, source, target, sourceHandle, targetHandle }) => ({
+        id,
+        source,
+        target,
+        sourceHandle,
+        targetHandle,
+      })),
+    };
+    const blob = new Blob([JSON.stringify(topology, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'topology.json';
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+  }, [nodes, edges]);
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -78,6 +99,14 @@ function FlowCanvas() {
     >
       <Background color="#374151" />
       <Controls />
+      <Panel position="top-right">
+        <button
+          onClick={exportToJson}
+          className="px-3 py-1.5 text-xs font-orbit font-bold uppercase tracking-widest border border-green-wildfire-500 text-green-wildfire-300 bg-green-wildfire-950 hover:bg-green-wildfire-900 rounded-sm shadow-[0_0_8px_rgba(0,255,0,0.2)] transition-colors"
+        >
+          Export JSON
+        </button>
+      </Panel>
     </ReactFlow>
   );
 }
