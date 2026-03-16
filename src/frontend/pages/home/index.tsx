@@ -39,7 +39,15 @@ function FlowCanvas() {
     (params: Connection | Edge) =>
       setEdges((eds) =>
         addEdge(
-          { ...params, animated: true, style: { stroke: "#9ca3af" } },
+          {
+            ...params,
+            animated: true,
+            style: {
+              stroke: "var(--color-green-wildfire-500)",
+              strokeWidth: 2,
+              filter: "drop-shadow(0 0 4px rgba(0,255,0,0.5))",
+            },
+          },
           eds,
         ),
       ),
