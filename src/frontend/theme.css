@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
 @import "tailwindcss";
 @tailwind base;
@@ -5,4 +6,44 @@
 
 @theme {
   --font-sans: "Work Sans", sans-serif;
+  --font-orbit: "Orbitron", sans-serif;
+
+  /* Green Wildfire Scale */
+  --color-green-wildfire-50: #e5ffe5;
+  --color-green-wildfire-100: #ccffcc;
+  --color-green-wildfire-200: #99ff99;
+  --color-green-wildfire-300: #66ff66;
+  --color-green-wildfire-400: #33ff33;
+  --color-green-wildfire-500: #00ff00;
+  --color-green-wildfire-600: #00cc00;
+  --color-green-wildfire-700: #009900;
+  --color-green-wildfire-800: #006600;
+  --color-green-wildfire-900: #003300;
+  --color-green-wildfire-950: #001a00;
+
+  /* Stealth Black Scale */
+  --color-stealth-black-50: #8d8d8d;
+  --color-stealth-black-100: #808080;
+  --color-stealth-black-200: #676767;
+  --color-stealth-black-300: #4d4d4d;
+  --color-stealth-black-400: #343434;
+  --color-stealth-black-500: #1a1a1a;
+  --color-stealth-black-600: #000000;
+  --color-stealth-black-700: #000000;
+  --color-stealth-black-800: #000000;
+  --color-stealth-black-900: #000000;
+  --color-stealth-black-950: #000000;
+
+  /* Red Red Scale */
+  --color-red-red-50: #ffe5e5;
+  --color-red-red-100: #ffcccc;
+  --color-red-red-200: #ff9999;
+  --color-red-red-300: #ff6666;
+  --color-red-red-400: #ff3333;
+  --color-red-red-500: #ff0000;
+  --color-red-red-600: #cc0000;
+  --color-red-red-700: #990000;
+  --color-red-red-800: #660000;
+  --color-red-red-900: #330000;
+  --color-red-red-950: #1a0000;
 }
