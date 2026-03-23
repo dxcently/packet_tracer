@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CISCO Packet Tracer Clone - Project Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Configuration & Custom Styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        indigo: {
+                            50: '#eef2ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Required Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar for tables/content */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Interactive Element Transitions */
+        .interactive-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- Chosen Palette: Warm Neutrals (Slate) with Indigo Accents for a professional, tech-focused harmony. -->
+    
+    <!-- Application Structure Plan: 
+         The SPA is structured as an interactive "Project Status Dashboard". 
+         Rather than a linear document, it divides the PRD into logical, explorable quadrants:
+         1. Executive Overview (Abstract, Goal, Tech Stack)
+         2. Requirements Explorer (Interactive Tabs for User, Functional, Non-Functional)
+         3. Sprint Timeline (Interactive weekly breakdown)
+         4. Requirements Traceability Matrix (RTM) Dashboard (Data visualizations and sortable table).
+         This structure transforms a static report into a management tool, making it easy for stakeholders to see progress, understand the architecture, and explore specific requirements interactively. 
+    -->
+
+    <!-- Visualization & Content Choices: 
+         - Tech Stack: Presented as interactive cards to categorize Frontend, Backend, and DB clearly. Goal: Organize.
+         - Requirements: Tabbed interface to prevent cognitive overload. Goal: Organize.
+         - Timeline: Clickable milestones to reveal weekly tasks dynamically. Goal: Change/Explore.
+         - RTM Status (Donut Chart using Chart.js): Shows completion percentage. Goal: Inform.
+         - Task Distribution (Bar Chart using Chart.js): Compares workload/progress across team members. Goal: Compare.
+         - RTM Table: Provides raw data access with visual status pills. Goal: Inform.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visual elements are Canvas (Chart.js), HTML/CSS, or Unicode. 
+    -->
+
+    <!-- Navigation Bar -->
+    <nav class="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl font-bold tracking-tight">🌐 PacketTracer.Web</span>
+                </div>
+                <div class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="#overview" class="hover:text-indigo-200 transition">Overview</a>
+                    <a href="#requirements" class="hover:text-indigo-200 transition">Requirements</a>
+                    <a href="#timeline" class="hover:text-indigo-200 transition">Timeline</a>
+                    <a href="#rtm" class="hover:text-indigo-200 transition">RTM & Progress</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Header / Hero -->
+        <header class="text-center space-y-4 py-8 border-b border-slate-200">
+            <div class="inline-block bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-semibold mb-2">Version 1.1.0 • Updated 3/22/2026</div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900">Project Requirement Dashboard</h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">Interactive portal for the CISCO Packet Tracer Web Clone project. Track our architectural goals, system requirements, and sprint progress.</p>
+            <div class="flex flex-wrap justify-center gap-2 mt-4 text-sm text-slate-500">
+                <span class="bg-white border border-slate-200 px-3 py-1 rounded-md shadow-sm">👤 Romario Billings</span>
+                <span class="bg-white border border-slate-200 px-3 py-1 rounded-md shadow-sm">👤 Aidan Walsh</span>
+                <span class="bg-white border border-slate-200 px-3 py-1 rounded-md shadow-sm">👤 Tyler Oberquell</span>
+                <span class="bg-white border border-slate-200 px-3 py-1 rounded-md shadow-sm">👤 Noah Feinberg</span>
+                <span class="bg-white border border-slate-200 px-3 py-1 rounded-md shadow-sm">👤 Khoa Ho</span>
+            </div>
+        </header>
+
+        <!-- Section 1: Executive Overview & Tech Stack -->
+        <section id="overview" class="scroll-mt-20">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 border-l-4 border-indigo-500 pl-3">Executive Overview & Architecture</h2>
+                <p class="text-slate-600 mt-2">This section outlines the core vision of the project and the technological foundation chosen to achieve it. It provides context on what we are building and the tools powering the simulation environment.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Abstract & Goal -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-900 mb-2 flex items-center">
+                            <span class="mr-2 text-indigo-500">🎯</span> Project Abstract
+                        </h3>
+                        <p class="text-slate-600 leading-relaxed text-sm">
+                            Designing and building a web-based network simulation tool inspired by Cisco Packet Tracer. The application features a GUI allowing users to create, manage, and visualize network devices (PCs, routers, switches) and their connections in a simulated environment. Key features include IP/MAC address assignment, subnet visualization, and monitoring device connectivity status.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-900 mb-2 flex items-center">
+                            <span class="mr-2 text-indigo-500">🚀</span> System Goal
+                        </h3>
+                        <p class="text-slate-600 leading-relaxed text-sm">
+                            Deliver a responsive frontend with a navigation bar, interactive device sidebar, and a central visualization graph for nodes and edges. Users can interact dynamically (zoom, click-and-drag, manage ports). The backend logic securely processes data and topologies, providing reliable communication between the graphical interface and the database.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tech Stack Cards -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">Technology Stack (v1.1.0)</h3>
+                    
+                    <div class="interactive-card bg-white rounded-lg shadow-sm border border-l-4 border-l-sky-500 border-slate-200 p-4 flex items-start">
+                        <div class="text-2xl mr-4 mt-1">💻</div>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Frontend Architecture</h4>
+                            <p class="text-sm text-slate-600 mt-1">Built with <strong>React (TypeScript / .tsx)</strong> for component management, styled efficiently using <strong>TailwindCSS v4</strong>. Graph visualizations are powered by <strong>Cytoscape.js</strong>. Network requests handled via <strong>Fetch API (JSON)</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="interactive-card bg-white rounded-lg shadow-sm border border-l-4 border-l-orange-500 border-slate-200 p-4 flex items-start">
+                        <div class="text-2xl mr-4 mt-1">⚙️</div>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Backend Server</h4>
+                            <p class="text-sm text-slate-600 mt-1">Server logic, authentication, and API endpoints are driven by <strong>Rust (Cargo)</strong>, replacing the previous Node.js setup to ensure high performance and strict memory safety during simulations.</p>
+                        </div>
+                    </div>
+
+                    <div class="interactive-card bg-white rounded-lg shadow-sm border border-l-4 border-l-blue-700 border-slate-200 p-4 flex items-start">
+                        <div class="text-2xl mr-4 mt-1">🗄️</div>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Database</h4>
+                            <p class="text-sm text-slate-600 mt-1">User credentials, encrypted passwords, and serialized topology JSON structures are persistently stored in <strong>PostgreSQL 18</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Requirements Explorer -->
+        <section id="requirements" class="scroll-mt-20">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 border-l-4 border-indigo-500 pl-3">Requirements Explorer</h2>
+                <p class="text-slate-600 mt-2">Interact with the tabs below to explore the detailed constraints and expected behaviors of the system. This modular view organizes the rules governing user interactions, core functionality, and system performance.</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <!-- Tabs -->
+                <div class="flex border-b border-slate-200 bg-slate-50">
+                    <button class="req-tab-btn flex-1 py-3 px-4 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600 transition-colors" data-target="req-user">User Roles</button>
+                    <button class="req-tab-btn flex-1 py-3 px-4 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors" data-target="req-func">Functional</button>
+                    <button class="req-tab-btn flex-1 py-3 px-4 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors" data-target="req-nonfunc">Non-Functional</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6 h-[300px] overflow-y-auto custom-scrollbar">
+                    <!-- User Requirements -->
+                    <div id="req-user" class="req-content space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                                <h4 class="font-bold text-slate-800 mb-2 flex items-center">🛡️ Guest User</h4>
+                                <ul class="list-disc pl-5 text-sm text-slate-600 space-y-1">
+                                    <li>Presented with sign-up and sign-in pages upon loading.</li>
+                                    <li>Ability to create a new account and authenticate.</li>
+                                    <li><strong>Restriction:</strong> Cannot interact with the simulation viewport until logged in.</li>
+                                </ul>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                                <h4 class="font-bold text-indigo-900 mb-2 flex items-center">🔑 Registered User</h4>
+                                <ul class="list-disc pl-5 text-sm text-indigo-800 space-y-1">
+                                    <li>Full access to all webpage features upon login.</li>
+                                    <li>Can see and interact with the viewport topology.</li>
+                                    <li>Can create, add, name, and connect network device ports.</li>
+                                    <li>Can toggle device power (On/Off).</li>
+                                    <li>Can view and edit device details (IP, MAC, Subnet).</li>
+                                    <li>Ability to save the current network simulation state.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Functional Requirements -->
+                    <div id="req-func" class="req-content hidden space-y-3">
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start"><span class="mr-2 font-bold text-indigo-500">1.</span> <div><strong>Authentication:</strong> Registration and secure login system storing credentials.</div></li>
+                            <li class="flex items-start"><span class="mr-2 font-bold text-indigo-500">2.</span> <div><strong>Device Management:</strong> Sidebar UI to add/delete devices. Auto-generation of MAC addresses, names, and IP subnet assignments.</div></li>
+                            <li class="flex items-start"><span class="mr-2 font-bold text-indigo-500">3.</span> <div><strong>Topology Viewport:</strong> Graph node system reflecting live connections, updating dynamically on adds/removes.</div></li>
+                            <li class="flex items-start"><span class="mr-2 font-bold text-indigo-500">4.</span> <div><strong>Connection Logic:</strong> Valid links: <code>PC ↔ Switch</code>, <code>Router ↔ Switch</code>, <code>Router ↔ Router</code>, <code>Router ↔ PC</code>. Invalid links: <code>PC ↔ PC</code>, <code>Switch ↔ Switch</code>.</div></li>
+                            <li class="flex items-start"><span class="mr-2 font-bold text-indigo-500">5.</span> <div><strong>Port State:</strong> Ports handle single connections. UI updates to "CONNECTED". Offline devices temporarily remove visual connection edges.</div></li>
+                            <li class="flex items-start"><span class="mr-2 font-bold text-indigo-500">6.</span> <div><strong>Simulation Engine:</strong> Animation of packet movement (small dot) along edges between established, online source/destination nodes.</div></li>
+                            <li class="flex items-start"><span class="mr-2 font-bold text-indigo-500">7.</span> <div><strong>Persistence:</strong> Save and load functionality mapping topology to the authenticated user.</div></li>
+                        </ul>
+                    </div>
+
+                    <!-- Non-Functional Requirements -->
+                    <div id="req-nonfunc" class="req-content hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="border-l-2 border-blue-400 pl-3">
+                            <h4 class="font-semibold text-slate-800 text-sm">⚡ Performance</h4>
+                            <p class="text-xs text-slate-600 mt-1">Graph updates must be instantaneous. Packet animations must be smooth. Backend operations optimized via native Rust execution.</p>
+                        </div>
+                        <div class="border-l-2 border-purple-400 pl-3">
+                            <h4 class="font-semibold text-slate-800 text-sm">🖱️ Usability</h4>
+                            <p class="text-xs text-slate-600 mt-1">Modern, simple UI styled with TailwindCSS. Viewport supports zoom, pan, and click-and-drag interactions.</p>
+                        </div>
+                        <div class="border-l-2 border-emerald-400 pl-3">
+                            <h4 class="font-semibold text-slate-800 text-sm">🛡️ Reliability</h4>
+                            <p class="text-xs text-slate-600 mt-1">Strict enforcement of device connection logic to prevent duplicate or invalid port connections.</p>
+                        </div>
+                        <div class="border-l-2 border-amber-400 pl-3">
+                            <h4 class="font-semibold text-slate-800 text-sm">🌍 Compatibility & Env</h4>
+                            <p class="text-xs text-slate-600 mt-1">Supports Chrome, Edge, Opera/GX, Firefox. Packaged for reliable, reproducible builds across developer environments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Project Timeline -->
+        <section id="timeline" class="scroll-mt-20">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 border-l-4 border-indigo-500 pl-3">Development Sprint Timeline</h2>
+                <p class="text-slate-600 mt-2">Select a week from the timeline below to view the specific goals, technical requirements, and completion status for that sprint phase.</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Timeline Controls -->
+                <div class="md:w-1/3 flex flex-col space-y-2 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                    
+                    <button class="timeline-btn relative flex items-center justify-between md:justify-center w-full py-3 group" data-week="1">
+                        <div class="flex items-center space-x-4 md:space-x-0 md:flex-col text-left md:text-center w-full">
+                            <div class="w-10 h-10 rounded-full border-4 border-white bg-emerald-500 text-white flex items-center justify-center font-bold z-10 shadow-sm transition-transform group-hover:scale-110">✓</div>
+                            <div class="md:mt-2 bg-white px-3 py-1 rounded-md shadow-sm border border-emerald-200">
+                                <div class="font-bold text-slate-800 text-sm">Week 1</div>
+                                <div class="text-xs text-emerald-600 font-semibold">Completed (3/15)</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button class="timeline-btn relative flex items-center justify-between md:justify-center w-full py-3 group" data-week="2">
+                        <div class="flex items-center space-x-4 md:space-x-0 md:flex-col text-left md:text-center w-full">
+                            <div class="w-10 h-10 rounded-full border-4 border-white bg-amber-500 text-white flex items-center justify-center font-bold z-10 shadow-sm transition-transform group-hover:scale-110 shadow-amber-200 shadow-lg">2</div>
+                            <div class="md:mt-2 bg-indigo-50 px-3 py-1 rounded-md shadow-sm border border-indigo-200">
+                                <div class="font-bold text-indigo-900 text-sm">Week 2</div>
+                                <div class="text-xs text-amber-600 font-semibold">Current (3/22)</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button class="timeline-btn relative flex items-center justify-between md:justify-center w-full py-3 group opacity-70 hover:opacity-100 transition-opacity" data-week="3">
+                        <div class="flex items-center space-x-4 md:space-x-0 md:flex-col text-left md:text-center w-full">
+                            <div class="w-10 h-10 rounded-full border-4 border-white bg-slate-300 text-slate-600 flex items-center justify-center font-bold z-10 shadow-sm transition-transform group-hover:scale-110">3</div>
+                            <div class="md:mt-2 bg-white px-3 py-1 rounded-md shadow-sm border border-slate-200">
+                                <div class="font-bold text-slate-700 text-sm">Week 3</div>
+                                <div class="text-xs text-slate-500">Upcoming (3/29)</div>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button class="timeline-btn relative flex items-center justify-between md:justify-center w-full py-3 group opacity-70 hover:opacity-100 transition-opacity" data-week="4">
+                        <div class="flex items-center space-x-4 md:space-x-0 md:flex-col text-left md:text-center w-full">
+                            <div class="w-10 h-10 rounded-full border-4 border-white bg-slate-300 text-slate-600 flex items-center justify-center font-bold z-10 shadow-sm transition-transform group-hover:scale-110">4</div>
+                            <div class="md:mt-2 bg-white px-3 py-1 rounded-md shadow-sm border border-slate-200">
+                                <div class="font-bold text-slate-700 text-sm">Week 4</div>
+                                <div class="text-xs text-slate-500">Upcoming (4/5)</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button class="timeline-btn relative flex items-center justify-between md:justify-center w-full py-3 group opacity-70 hover:opacity-100 transition-opacity" data-week="5">
+                        <div class="flex items-center space-x-4 md:space-x-0 md:flex-col text-left md:text-center w-full">
+                            <div class="w-10 h-10 rounded-full border-4 border-white bg-slate-300 text-slate-600 flex items-center justify-center font-bold z-10 shadow-sm transition-transform group-hover:scale-110">5</div>
+                            <div class="md:mt-2 bg-white px-3 py-1 rounded-md shadow-sm border border-slate-200">
+                                <div class="font-bold text-slate-700 text-sm">Week 5</div>
+                                <div class="text-xs text-slate-500">Upcoming (4/12)</div>
+                            </div>
+                        </div>
+                    </button>
+
+                </div>
+
+                <!-- Timeline Display Panel -->
+                <div class="md:w-2/3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 min-h-[300px]">
+                    <div id="timeline-display" class="space-y-4">
+                        <!-- Content injected via JS -->
+                        <div class="animate-pulse flex space-x-4">
+                            <div class="flex-1 space-y-4 py-1">
+                                <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                                <div class="space-y-2">
+                                    <div class="h-4 bg-slate-200 rounded"></div>
+                                    <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Requirements Traceability Matrix (RTM) -->
+        <section id="rtm" class="scroll-mt-20 pb-12">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 border-l-4 border-indigo-500 pl-3">Requirements Traceability & Progress</h2>
+                <p class="text-slate-600 mt-2">Visualizing the task distribution across team members and current overall completion status. Use the table to see exact testing methodologies and WBS assignments.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Chart 1: Overall Status -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <h3 class="text-lg font-semibold text-slate-800 text-center mb-4">Project Completion Status</h3>
+                    <div class="chart-container flex-grow">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-slate-500 mt-4">Tracks the aggregate status of all 10 defined functional milestones.</p>
+                </div>
+
+                <!-- Chart 2: Task Assignment -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                    <h3 class="text-lg font-semibold text-slate-800 text-center mb-4">Task Allocation by Member</h3>
+                    <div class="chart-container flex-grow">
+                        <canvas id="memberChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-slate-500 mt-4">Visualizes the workload distribution and individual progress.</p>
+                </div>
+            </div>
+
+            <!-- RTM Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm uppercase tracking-wider">
+                                <th class="p-4 font-semibold">ID</th>
+                                <th class="p-4 font-semibold">Description</th>
+                                <th class="p-4 font-semibold">Owner</th>
+                                <th class="p-4 font-semibold">WBS</th>
+                                <th class="p-4 font-semibold">Test Method</th>
+                                <th class="p-4 font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rtm-table-body" class="text-sm text-slate-700 divide-y divide-slate-100">
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Application Logic -->
+    <script>
+        // --- DATA STORE ---
+        const rtmData = [
+            { id: 1, desc: "Must allow creation of devices (click/drag or add)", owner: "Noah", wbs: "Week 3", test: "Click and drag", status: "COMPLETED" },
+            { id: 2, desc: "Network Logic: ID, MAC, IP, SubnetMask, DefaultGateway", owner: "Tyler", wbs: "Week 1", test: "Add node, check details", status: "COMPLETED" },
+            { id: 3, desc: "Add sign-in and sign-up page", owner: "Romario", wbs: "Week 1", test: "Open the page", status: "COMPLETED" },
+            { id: 4, desc: "Connection Rules verification", owner: "Aidan", wbs: "Week 1", test: "Try connection combinations", status: "COMPLETED" },
+            { id: 5, desc: "Network Generator logic", owner: "Khoa", wbs: "Week 1", test: "Create device object", status: "COMPLETED" },
+            { id: 6, desc: "Sidebar with device details", owner: "Tyler", wbs: "Week 2", test: "Create device object", status: "IN PROGRESS" },
+            { id: 7, desc: "Save state for User topology", owner: "Romario", wbs: "Week 3", test: "Attempt to save and load", status: "PENDING" },
+            { id: 8, desc: "Port change status UI updates", owner: "Khoa", wbs: "Week 3", test: "Check port behavior on click", status: "PENDING" },
+            { id: 9, desc: "Packet Simulation animation", owner: "Noah", wbs: "Week 4", test: "Simulate with connected devices", status: "PENDING" },
+            { id: 10, desc: "Backend Authentication Validation", owner: "Aidan", wbs: "Week 5", test: "Attempt login/logout", status: "PENDING" }
+        ];
+
+        const timelineData = {
+            "1": {
+                status: "COMPLETED",
+                reqs: "React (TypeScript), TailwindCSS, HTML",
+                tasks: [
+                    "UI with sidebar and viewport (Cytoscape.js logic setup).",
+                    "Add device functionality drop-down.",
+                    "Sign-in and sign-up page created.",
+                    "Device Network Logic objects (ID, MAC, IP, etc).",
+                    "Connection logic constraints established.",
+                    "Network Generator logic (Routers assign IP/Subnets)."
+                ]
+            },
+            "2": {
+                status: "CURRENT WEEK / IN PROGRESS",
+                reqs: "React (TypeScript), TailwindCSS",
+                tasks: [
+                    "UI Behaviors: Toggle button for ONLINE/OFFLINE.",
+                    "Pop-up window/sidebar details on 'Add Device'.",
+                    "Default name generation (Router1, PC1) and renaming.",
+                    "Clear all functionality.",
+                    "Structure project folders.",
+                    "Backend setup script for hot-running Rust, Tailwind, Frontend."
+                ]
+            },
+            "3": {
+                status: "UPCOMING",
+                reqs: "React (TypeScript), TailwindCSS, PostgreSQL 18",
+                tasks: [
+                    "Device dropdown menu details expansion.",
+                    "Click and drag to viewport functionality.",
+                    "Port selection logic (must be ONLINE, empty). UI updates.",
+                    "Error messaging for invalid connections.",
+                    "Database schema design for Users and Saved Topologies."
+                ]
+            },
+            "4": {
+                status: "UPCOMING",
+                reqs: "React (TypeScript), TailwindCSS",
+                tasks: [
+                    "Viewport node creation/deletion synchronization.",
+                    "Edge state management based on device ONLINE/OFFLINE status.",
+                    "Packet simulation animation logic along edges.",
+                    "Validation check prior to animation.",
+                    "Simulation play button.",
+                    "Frontend Save/Load UI triggers."
+                ]
+            },
+            "5": {
+                status: "UPCOMING",
+                reqs: "Rust Backend, PostgreSQL 18",
+                tasks: [
+                    "Finalize Database tables.",
+                    "Rust backend server setup and endpoint routing.",
+                    "Fetch API communication established.",
+                    "Authentication logic (password encryption, validation).",
+                    "State persistence logic for topologies mapping to User IDs."
+                ]
+            }
+        };
+
+
+        // --- UI LOGIC ---
+
+        // 1. Requirements Tabs
+        function initTabs() {
+            const btns = document.querySelectorAll('.req-tab-btn');
+            const contents = document.querySelectorAll('.req-content');
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Reset all
+                    btns.forEach(b => {
+                        b.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600');
+                        b.classList.add('text-slate-500');
+                    });
+                    contents.forEach(c => c.classList.add('hidden'));
+
+                    // Activate selected
+                    btn.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600');
+                    btn.classList.remove('text-slate-500');
+                    document.getElementById(btn.dataset.target).classList.remove('hidden');
+                });
+            });
+        }
+
+        // 2. Timeline Interaction
+        function initTimeline() {
+            const btns = document.querySelectorAll('.timeline-btn');
+            const display = document.getElementById('timeline-display');
+
+            const renderTimelineContent = (weekKey) => {
+                const data = timelineData[weekKey];
+                let statusColor = "text-slate-500";
+                if(data.status.includes("COMPLETED")) statusColor = "text-emerald-600";
+                if(data.status.includes("CURRENT")) statusColor = "text-amber-600";
+
+                const listItems = data.tasks.map(t => `<li class="flex items-start"><span class="mr-2 text-indigo-400">▹</span><span>${t}</span></li>`).join('');
+
+                display.innerHTML = `
+                    <div class="animation-fade-in">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                            <h3 class="text-xl font-bold text-slate-800">Sprint Week ${weekKey}</h3>
+                            <span class="text-xs font-bold px-3 py-1 bg-slate-100 rounded-full ${statusColor}">${data.status}</span>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-1">Tech Focus</span>
+                            <div class="text-sm font-medium text-indigo-700 bg-indigo-50 inline-block px-3 py-1 rounded border border-indigo-100">${data.reqs}</div>
+                        </div>
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-2">Key Objectives</span>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                ${listItems}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            };
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    renderTimelineContent(btn.dataset.week);
+                });
+            });
+
+            // Init with week 2 (current)
+            renderTimelineContent("2");
+        }
+
+        // 3. Render RTM Table
+        function renderRTMTable() {
+            const tbody = document.getElementById('rtm-table-body');
+            tbody.innerHTML = rtmData.map(item => {
+                let statusBadge = '';
+                if (item.status === 'COMPLETED') statusBadge = '<span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded text-xs font-bold">COMPLETED</span>';
+                else if (item.status === 'IN PROGRESS') statusBadge = '<span class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs font-bold">IN PROGRESS</span>';
+                else statusBadge = '<span class="px-2 py-1 bg-slate-100 text-slate-500 rounded text-xs font-bold">PENDING</span>';
+
+                return `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-4 border-b border-slate-100 font-medium">${item.id}</td>
+                        <td class="p-4 border-b border-slate-100">${item.desc}</td>
+                        <td class="p-4 border-b border-slate-100"><span class="bg-indigo-50 text-indigo-700 px-2 py-1 rounded-md text-xs font-medium">${item.owner}</span></td>
+                        <td class="p-4 border-b border-slate-100 whitespace-nowrap">${item.wbs}</td>
+                        <td class="p-4 border-b border-slate-100 text-xs">${item.test}</td>
+                        <td class="p-4 border-b border-slate-100 whitespace-nowrap">${statusBadge}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 4. Initialize Charts (Chart.js)
+        function initCharts() {
+            // Data Processing for Charts
+            const statusCounts = { completed: 0, inProgress: 0, pending: 0 };
+            const memberStats = {};
+
+            rtmData.forEach(req => {
+                // Status mapping
+                if (req.status === 'COMPLETED') statusCounts.completed++;
+                else if (req.status === 'IN PROGRESS') statusCounts.inProgress++;
+                else statusCounts.pending++;
+
+                // Member mapping
+                if (!memberStats[req.owner]) {
+                    memberStats[req.owner] = { completed: 0, active: 0 };
+                }
+                if (req.status === 'COMPLETED') memberStats[req.owner].completed++;
+                else memberStats[req.owner].active++;
+            });
+
+            // Chart Configuration: Global Defaults
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // Chart 1: Donut Status
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'In Progress', 'Pending'],
+                    datasets: [{
+                        data: [statusCounts.completed, statusCounts.inProgress, statusCounts.pending],
+                        backgroundColor: [
+                            '#10b981', // emerald-500
+                            '#f59e0b', // amber-500
+                            '#cbd5e1'  // slate-300
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL for chart-container logic
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    label += context.parsed + ' items';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            // Chart 2: Stacked Bar for Members
+            const ctxMember = document.getElementById('memberChart').getContext('2d');
+            const members = Object.keys(memberStats);
+            const compData = members.map(m => memberStats[m].completed);
+            const actData = members.map(m => memberStats[m].active);
+
+            new Chart(ctxMember, {
+                type: 'bar',
+                data: {
+                    labels: members,
+                    datasets: [
+                        {
+                            label: 'Completed Tasks',
+                            data: compData,
+                            backgroundColor: '#6366f1', // indigo-500
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Pending/Active Tasks',
+                            data: actData,
+                            backgroundColor: '#e2e8f0', // slate-200
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL for chart-container logic
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { 
+                            stacked: true, 
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 },
+                            grid: { color: '#f1f5f9' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    // Wrap labels logic (requested 16-char logic handling, though labels are short here)
+                                    let title = context[0].label;
+                                    return title.length > 16 ? title.substring(0, 16) + '...' : title;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Everything on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            initTabs();
+            initTimeline();
+            renderRTMTable();
+            initCharts();
+        });
+    </script>
+</body>
+</html>
