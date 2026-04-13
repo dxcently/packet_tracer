@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Network, User, Lock, AlertCircle, CheckCircle, Loader } from 'lucide-react';
+import { Network, Mail, Lock, AlertCircle, CheckCircle, Loader } from 'lucide-react';
 
 const GRID_SIZE = 40;
 const MAX_DRIFT = 15;
@@ -16,7 +16,7 @@ function Login() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
@@ -189,21 +189,20 @@ function Login() {
     setStatus('loading');
     setMessage('');
 
-    const payload = { username, password };
+    const payload = { email, password };
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('/api/user/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        setStatus('success');
-        setMessage('Authentication successful. Redirecting...');
-        setTimeout(() => { window.location.href = '/home/'; }, 1500);
-      } else if (response.status === 404 || response.status === 405) {
-        // No API implemented yet — treat as mock success
+        const data = await response.json();
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
         setStatus('success');
         setMessage('Authentication successful. Redirecting...');
         setTimeout(() => { window.location.href = '/home/'; }, 1500);
@@ -213,10 +212,8 @@ function Login() {
         setMessage((data as { message?: string }).message ?? 'Authentication failed. Try again.');
       }
     } catch {
-      // Network error — treat as mock success
-      setStatus('success');
-      setMessage('Authentication successful. Redirecting...');
-      setTimeout(() => { window.location.href = '/home/'; }, 1500);
+      setStatus('error');
+      setMessage('Network error. Please try again.');
     }
   };
 
@@ -262,20 +259,20 @@ function Login() {
           </h2>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            {/* Username */}
+            {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-green-wildfire-600 text-xs tracking-widest uppercase">
-                Username
+                Email
               </label>
               <div className="relative flex items-center">
-                <User size={14} className="absolute left-3 text-green-wildfire-700 pointer-events-none" />
+                <Mail size={14} className="absolute left-3 text-green-wildfire-700 pointer-events-none" />
                 <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={isLoading}
-                  placeholder="enter username"
+                  placeholder="enter email"
                   className="
                     w-full pl-9 pr-4 py-2.5
                     border border-green-wildfire-800 bg-stealth-black-600
