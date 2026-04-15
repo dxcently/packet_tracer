@@ -22,7 +22,11 @@ class Sidebar extends Component {
       hover:bg-green-wildfire-800 hover:border-red-red-500 
       hover:text-red-red-200 hover:shadow-[0_0_15px_rgba(255,0,0,0.4)]
     `;
-
+    const signOut = async () => {
+      //await fetch('/api/', {method: 'POST'});
+      window.location.href = '../login/index.html';
+    };
+    
     return (
       <aside className="w-64 p-5 border-r border-stealth-black-500 bg-stealth-black-900 font-orbit flex flex-col gap-4">
         <div>
@@ -87,6 +91,11 @@ class Sidebar extends Component {
             <Server size={20} />
           </span>
           NAS
+        </div>
+        <div className="mt-auto w-full text-lg border-2 block py-2 text-center border border-green-wildfire-500 text-green-wildfire-400 tracking-widest uppercase bg-green-wildfire-900 hover:bg-green-wildfire-950">
+          <button onClick={signOut}>
+            Sign out
+          </button>
         </div>
       </aside>
     );
