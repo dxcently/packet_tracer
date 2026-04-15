@@ -23,7 +23,7 @@ class Sidebar extends Component {
       hover:text-red-red-200 hover:shadow-[0_0_15px_rgba(255,0,0,0.4)]
     `;
     const signOut = async () => {
-      //await fetch('/api/', {method: 'POST'});
+      //await fetch('/api/user/logout', {method: 'POST'});
       window.location.href = '../login/index.html';
     };
     
