@@ -1,6 +1,9 @@
 {
   "name": "packet_tracer",
   "version": "1.0.0",
+  "scripts": {
+    "mockdb": "node util/mockdb.ts"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.2.1",
     "@xyflow/react": "^12.10.1",
@@ -13,6 +16,7 @@
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "pgmock": "^1.0.3",
     "rolldown": "^1.0.0-rc.9"
   }
 }
