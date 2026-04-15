@@ -88,6 +88,14 @@ class Sidebar extends Component {
           </span>
           NAS
         </div>
+        <div className="mt-auto w-full">
+          <a
+            href="../login/index.html"
+            className="border-2 block py-2 text-center border border-green-wildfire-500 text-green-wildfire-400 text-sm tracking-widest uppercase hover:bg-green-wildfire-950 bg-green-wildfire-900"
+          >
+            Sign out
+          </a>
+        </div>
       </aside>
     );
   }
