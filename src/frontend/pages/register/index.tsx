@@ -188,7 +188,24 @@ function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (username.length <= 2){
+      setStatus('error');
+      setMessage("Please enter a valid username.");
+      return;
+    }else if(!email.includes('@') ){
+      setStatus('error');
+      setMessage("You are missing '@' in your email field");
+      return;
+    }else if (!email.includes('.')){
+      setStatus('error');
+      setMessage("You are missing a '.' in your email field");
+      return;
+    }
+    if (password.length < 8){
+      setStatus('error');
+      setMessage('Password must be at least 8 characters.');
+      return;
+    }else if (password !== confirmPassword) {
       setStatus('error');
       setMessage('Passwords do not match.');
       return;
