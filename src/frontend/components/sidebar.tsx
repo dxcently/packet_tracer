@@ -92,7 +92,7 @@ class Sidebar extends Component {
           </span>
           NAS
         </div>
-        <div className="mt-auto w-full text-lg border-2 block py-2 text-center border border-green-wildfire-500 text-green-wildfire-400 tracking-widest uppercase bg-green-wildfire-900 hover:bg-green-wildfire-950">
+        <div className="mt-auto w-full text-lg border-2 block py-2 text-center border rounded border-green-wildfire-500 text-green-wildfire-400 tracking-widest uppercase bg-green-wildfire-900 hover:bg-green-wildfire-950">
           <button onClick={signOut}>
             Sign out
           </button>
