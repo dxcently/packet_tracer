@@ -138,7 +138,30 @@ function FlowCanvas() {
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 100);
   }, [nodes, edges]);
-
+  
+  const importWithJson = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+  
+      const reader=new FileReader();
+      reader.onload=(event) => {
+        try {
+          const topology=JSON.parse(event.target?.result as string);
+          setNodes(topology.nodes ?? []);
+          setEdges(topology.edges ?? []);
+        } catch {
+          alert('Invalid JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }, [setNodes, setEdges]);
+  
   return (
     <div className="relative h-full w-full">
       <ReactFlow
@@ -159,8 +182,14 @@ function FlowCanvas() {
         <Controls />
         <Panel position="top-right">
           <button
-            onClick={exportToJson}
+            onClick={importWithJson}
             className="px-3 py-1.5 text-xs font-orbit font-bold uppercase tracking-widest border border-green-wildfire-500 text-green-wildfire-300 bg-green-wildfire-950 hover:bg-green-wildfire-900 rounded-sm shadow-[0_0_8px_rgba(0,255,0,0.2)] transition-colors"
+          >
+            Import JSON
+          </button>
+          <button
+            onClick={exportToJson}
+            className="ml-4 px-3 py-1.5 text-xs font-orbit font-bold uppercase tracking-widest border border-green-wildfire-500 text-green-wildfire-300 bg-green-wildfire-950 hover:bg-green-wildfire-900 rounded-sm shadow-[0_0_8px_rgba(0,255,0,0.2)] transition-colors"
           >
             Export JSON
           </button>
