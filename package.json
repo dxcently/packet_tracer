@@ -1,7 +1,7 @@
 {
   "name": "packet_tracer",
   "version": "1.0.0",
-  "scripts":{"test": "playwright test"
+  "scripts":{"test": "playwright test"},
   "dependencies": {
     "@tailwindcss/cli": "^4.2.1",
     "@xyflow/react": "^12.10.1",
