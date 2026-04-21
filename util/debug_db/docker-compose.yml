@@ -1,0 +1,9 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: debug_db
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+    command: ["postgres", "-c", "log_statement=all"]

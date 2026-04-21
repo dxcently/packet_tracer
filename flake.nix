@@ -124,6 +124,40 @@
               wait
             '';
           }
+          {
+            name = "db";
+            command = ''
+              usage() {
+                echo "Usage: $0 [-l] [-c]"
+                echo "  -l    Launch Docker DB"
+                echo "  -c    Connect via psql"
+                exit 1
+              }
+
+              if [ $# -eq 0 ]; then
+                usage
+              fi
+
+              while getopts "lc" opt; do
+                case $opt in
+                  l)
+                    echo "Starting database..."
+                    (
+                      cd util/debug_db || exit
+                      docker compose run --rm --service-ports db
+                    )
+                    ;;
+                  c)
+                    echo "Connecting to database..."
+                    psql -h localhost -p 5432 -U postgres
+                    ;;
+                  \?)
+                    usage
+                    ;;
+                esac
+              done
+            '';
+          }
         ];
       });
     });
