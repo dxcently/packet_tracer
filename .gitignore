@@ -5,3 +5,4 @@
 /node_modules
 .env
 justfile
+/tests/test_db
