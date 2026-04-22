@@ -23,6 +23,7 @@ import ServerNode from "../../components/nodes/server.tsx";
 import ComputerNode from "../../components/nodes/computer.tsx";
 import RouterNode from "../../components/nodes/router.tsx";
 import NASNode from "../../components/nodes/nas.tsx";
+import DataEdge from "../../components/dataedges.tsx";
 
 import type { NodeData } from "../../types.ts";
 
@@ -32,6 +33,9 @@ const nodeTypes = {
   computer: ComputerNode,
   router: RouterNode,
   nas: NASNode,
+};
+const edgeTypes = {
+  dataTransfer: DataEdge,
 };
 
 function FlowCanvas() {
@@ -46,7 +50,7 @@ function FlowCanvas() {
         addEdge(
           {
             ...params,
-            animated: true,
+            type: "dataTransfer",
             style: {
               stroke: "var(--color-green-wildfire-500)",
               strokeWidth: 2,
@@ -103,9 +107,7 @@ function FlowCanvas() {
 
   const handleSaveNode = useCallback(
     (nodeId: string, data: NodeData) => {
-      setNodes((nds) =>
-        nds.map((n) => (n.id === nodeId ? { ...n, data } : n)),
-      );
+      setNodes((nds) => nds.map((n) => (n.id === nodeId ? { ...n, data } : n)));
     },
     [setNodes],
   );
@@ -151,6 +153,7 @@ function FlowCanvas() {
         onDragOver={onDragOver}
         onNodeDoubleClick={onNodeDoubleClick}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
         colorMode="dark"
         className="bg-stealth-black-400"
@@ -194,4 +197,3 @@ function Home() {
 
 const root = ReactDOM.createRoot(document.querySelector("#root")!);
 root.render(<Home />);
-

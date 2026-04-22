@@ -47,3 +47,59 @@
   --color-red-red-900: #330000;
   --color-red-red-950: #1a0000;
 }
+
+@keyframes wave-shift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50px);
+  }
+}
+
+#electric-wave-filter feTurbulence {
+  animation: wave-shift 2s linear infinite;
+}
+
+@keyframes flow {
+  from {
+    stroke-dashoffset: 35;
+  } /* Sum of dash (20) + gap (15) */
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-flow {
+  stroke-dasharray: 20, 15;
+  animation: flow 2s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes dash-move {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.icon-container {
+  offset-rotate: auto -90deg;
+  animation: dash-move 4s linear infinite;
+}
+
+/* When data-animated="false" is set on the container via Rust/Frontend state */
+[data-animated="false"] .animate-flow,
+[data-animated="false"] .icon-container,
+[data-animated="false"] #electric-wave-filter feTurbulence {
+  animation-play-state: paused !important;
+}
+
+/* Optional: Make the line look 'dimmed' when off */
+[data-animated="false"] .animate-flow {
+  opacity: 0.5;
+  filter: saturate(0.5);
+  transition: opacity 0.3s ease;
+}
