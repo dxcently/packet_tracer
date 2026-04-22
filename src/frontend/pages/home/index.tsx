@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import {
   ReactFlow,
@@ -38,11 +38,20 @@ const edgeTypes = {
   dataTransfer: DataEdge,
 };
 
-function FlowCanvas() {
+function FlowCanvas({ isAnimating }: { isAnimating: boolean }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
   const [editingNode, setEditingNode] = useState<Node | null>(null);
+
+  useEffect(() => {
+    setEdges((eds) =>
+      eds.map((edge) => ({
+        ...edge,
+        data: { ...edge.data, isAnimating },
+      })),
+    );
+  }, [isAnimating, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection | Edge) =>
@@ -51,16 +60,13 @@ function FlowCanvas() {
           {
             ...params,
             type: "dataTransfer",
-            style: {
-              stroke: "var(--color-green-wildfire-500)",
-              strokeWidth: 2,
-              filter: "drop-shadow(0 0 4px rgba(0,255,0,0.5))",
-            },
+            data: { isAnimating },
+            style: {},
           },
           eds,
         ),
       ),
-    [setEdges],
+    [setEdges, isAnimating],
   );
 
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -183,12 +189,18 @@ function FlowCanvas() {
 }
 
 function Home() {
+  const [isAnimating, setIsAnimating] = useState(true);
+  const toggleAnimation = () => setIsAnimating((prev) => !prev);
+
   return (
     <div className="flex w-screen h-screen overflow-hidden bg-stealth-black-400">
       <ReactFlowProvider>
-        <Sidebar />
+        <Sidebar
+          isAnimating={isAnimating}
+          onToggleAnimation={toggleAnimation}
+        />
         <div className="flex-grow h-full relative">
-          <FlowCanvas />
+          <FlowCanvas isAnimating={isAnimating} />
         </div>
       </ReactFlowProvider>
     </div>

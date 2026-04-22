@@ -1,4 +1,3 @@
-import React from "react";
 import { BaseEdge, EdgeProps, getBezierPath } from "@xyflow/react";
 import { Package } from "lucide-react";
 
@@ -10,8 +9,7 @@ export default function DataEdge({
   targetY,
   sourcePosition,
   targetPosition,
-  style = {},
-  markerEnd,
+  data,
 }: EdgeProps) {
   const [edgePath] = getBezierPath({
     sourceX,
@@ -21,53 +19,42 @@ export default function DataEdge({
     targetY,
     targetPosition,
   });
+
+  const isAnimating = data?.isAnimating !== false;
+
   return (
     <>
-      <svg style={{ position: "absolute", width: 0, height: 0 }}>
-        <defs>
-          <filter
-            id="electric-wave-smooth"
-            x="-20%"
-            y="-20%"
-            width="140%"
-            height="140%"
-          >
-            <feTurbulence
-              type="turbulence"
-              baseFrequency="0.02 0.05"
-              numOctaves="1"
-              seed="5"
-            >
-              {/* Note: Fast seed changes cause 'teleporting' waves. 
-                  Removed the aggressive seed animation for a smoother look, 
-                  or use a very subtle frequency shift. */}
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" scale="3" />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* 1. Background Cable */}
       <BaseEdge
         path={edgePath}
-        style={{ stroke: "#022c22", strokeWidth: 5, opacity: 0.4 }}
-      />
-
-      {/* 2. The Wavy Flowing Line */}
-      <path
-        d={edgePath}
-        fill="none"
-        className="animate-flow" // Class from theme.css handles the seamless loop
         style={{
-          stroke: "var(--color-green-wildfire-500)",
-          strokeWidth: 2,
-          filter:
-            "url(#electric-wave-smooth) drop-shadow(0 0 4px rgba(0,255,0,0.7))",
-          strokeLinecap: "round",
+          stroke: "#022c22",
+          strokeWidth: 5,
+          // Dim the background track when off
+          opacity: isAnimating ? 0.4 : 0.1,
         }}
       />
 
-      {/* 3. The Icon */}
+      <path
+        d={edgePath}
+        fill="none"
+        className={isAnimating ? "animate-flow" : ""}
+        style={{
+          // Change color to a muted gray-green and lower opacity when off
+          stroke: isAnimating
+            ? "var(--color-green-wildfire-500)"
+            : "var(--color-green-wildfire-900)",
+          strokeWidth: 2,
+          strokeLinecap: "round",
+          animationPlayState: isAnimating ? "running" : "paused",
+          // Reduce or remove the glow effect when dimmed
+          filter: isAnimating
+            ? "drop-shadow(0 0 4px rgba(0,255,0,0.7))"
+            : "none",
+          opacity: isAnimating ? 1 : 0.5,
+          transition: "all 0.3s ease", // Smooth transition when toggling
+        }}
+      />
+
       <foreignObject
         width={40}
         height={40}
@@ -78,6 +65,8 @@ export default function DataEdge({
           offsetPath: `path("${edgePath}")`,
           offsetRotate: "auto -90deg",
           animation: "dash-move 4s linear infinite",
+          animationPlayState: isAnimating ? "running" : "paused",
+          display: isAnimating ? "block" : "none",
         }}
       >
         <div className="flex items-center justify-center w-full h-full">

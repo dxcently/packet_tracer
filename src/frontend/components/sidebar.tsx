@@ -24,9 +24,11 @@ class Sidebar extends Component {
     `;
     const signOut = async () => {
       //await fetch('/api/user/logout', {method: 'POST'});
-      window.location.href = '../login/index.html';
+      window.location.href = "../login/index.html";
     };
-    
+
+    const { isAnimating, onToggleAnimation } = this.props as any;
+
     return (
       <aside className="w-64 p-5 border-r border-stealth-black-500 bg-stealth-black-900 font-orbit flex flex-col gap-4">
         <div>
@@ -37,7 +39,6 @@ class Sidebar extends Component {
             Drag items to the canvas
           </div>
         </div>
-
         <div
           onDragStart={(e) => this.onDragStart(e, "server")}
           draggable
@@ -48,7 +49,6 @@ class Sidebar extends Component {
           </span>
           Server
         </div>
-
         <div
           onDragStart={(e) => this.onDragStart(e, "switch")}
           draggable
@@ -59,7 +59,6 @@ class Sidebar extends Component {
           </span>
           Switch
         </div>
-
         <div
           onDragStart={(e) => this.onDragStart(e, "computer")}
           draggable
@@ -70,7 +69,6 @@ class Sidebar extends Component {
           </span>
           Computer
         </div>
-
         <div
           onDragStart={(e) => this.onDragStart(e, "router")}
           draggable
@@ -81,7 +79,6 @@ class Sidebar extends Component {
           </span>
           Router
         </div>
-
         <div
           onDragStart={(e) => this.onDragStart(e, "nas")}
           draggable
@@ -92,11 +89,27 @@ class Sidebar extends Component {
           </span>
           NAS
         </div>
-        <div className="mt-auto w-full text-lg border-2 block py-2 text-center border rounded border-green-wildfire-500 text-green-wildfire-400 tracking-widest uppercase bg-green-wildfire-900 hover:bg-green-wildfire-950">
-          <button onClick={signOut}>
+        <div className="mt-auto flex flex-col gap-3">
+          {/* SIMULATE BUTTON */}
+          <button
+            onClick={onToggleAnimation}
+            className={`w-full py-2 border-2 rounded font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer active:scale-95 ${
+              isAnimating
+                ? "border-green-wildfire-500 text-green-wildfire-400 bg-green-wildfire-900/50 shadow-[0_0_10px_rgba(0,255,0,0.2)]"
+                : "border-stealth-black-400 text-stealth-black-100 bg-stealth-black-500/20 opacity-60"
+            }`}
+          >
+            {isAnimating ? "Simulate: ON" : "Simulate: OFF"}
+          </button>
+
+          {/* SIGN OUT BUTTON - Fixed to be a single clickable block */}
+          <button
+            onClick={signOut}
+            className="w-full text-lg border-2 py-2 text-center border-green-wildfire-500 text-green-wildfire-400 tracking-widest uppercase bg-green-wildfire-900 hover:bg-green-wildfire-950 cursor-pointer active:scale-95 transition-transform"
+          >
             Sign out
           </button>
-        </div>
+        </div>{" "}
       </aside>
     );
   }
